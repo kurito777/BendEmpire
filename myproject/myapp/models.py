@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth import User
 
 # Create your models here.
 
@@ -28,17 +29,9 @@ class TipoSubscripcion(models.Model):
         return self.nombre   
 class Subscripcion(models.Model):
     tipo = models.ForeignKey(TipoSubscripcion, on_delete=models.CASCADE)
-    usuario = models.ForeignKey('Usuario', on_delete=models.CASCADE)
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
     fecha_inicio = models.DateField()
     fecha_fin = models.DateField()
 
     def __str__(self):
         return f"{self.usuario.username} - {self.tipo.nombre}"
-class Usuario(AbstractUser):
-    nombre = models.CharField(max_length=60)
-    apellido = models.CharField(max_length=60)
-    email = models.EmailField(unique=True)
-    fecha_nacimiento = models.DateField(null=True, blank=True)
-
-    def __str__(self):
-        return self.username
