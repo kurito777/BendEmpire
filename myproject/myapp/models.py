@@ -19,7 +19,26 @@ class Manga(models.Model):
     def __str__(self):
         return f"{self.title} {self.estado} {Author}"
     
-class tipo_sub(models.Model):
-    estado_sub = models.BooleanField()    
-class Subcribcion(models.Model):
-    tipo_sub = models.ForeignKey(tipo_sub, on_delete=models.CASCADE, related_name="mangas")
+class TipoSubscripcion(models.Model):
+    nombre = models.CharField(max_length=60)
+    descripcion = models.TextField()
+    precio = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return self.nombre   
+class Subscripcion(models.Model):
+    tipo = models.ForeignKey(TipoSubscripcion, on_delete=models.CASCADE)
+    usuario = models.ForeignKey('Usuario', on_delete=models.CASCADE)
+    fecha_inicio = models.DateField()
+    fecha_fin = models.DateField()
+
+    def __str__(self):
+        return f"{self.usuario.username} - {self.tipo.nombre}"
+class Usuario(AbstractUser):
+    nombre = models.CharField(max_length=60)
+    apellido = models.CharField(max_length=60)
+    email = models.EmailField(unique=True)
+    fecha_nacimiento = models.DateField(null=True, blank=True)
+
+    def __str__(self):
+        return self.username
